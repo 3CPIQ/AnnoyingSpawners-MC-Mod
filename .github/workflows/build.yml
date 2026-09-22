@@ -1,0 +1,44 @@
+name: Build Annoying Spawners
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.8'
+
+      - name: Reconstruct source archive
+        run: cat build-source/chunk*.b64 | base64 --decode > AnnoyingSpawners-0.1.0-source.zip
+
+      - name: Extract source
+        run: unzip -q AnnoyingSpawners-0.1.0-source.zip -d extracted
+
+      - name: Build Forge mod
+        working-directory: extracted/AnnoyingSpawners
+        run: gradle build --stacktrace
+
+      - name: Upload mod JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnnoyingSpawners-Forge-1.20.1
+          path: extracted/AnnoyingSpawners/build/libs/*.jar
+          if-no-files-found: error
