@@ -1,6 +1,8 @@
 name: Build Annoying Spawners
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +32,12 @@ jobs:
       - name: Extract source
         run: unzip -q AnnoyingSpawners-0.1.0-source.zip -d extracted
 
+      - name: Apply 0.1.1 fixes
+        run: |
+          base64 --decode patches/v0.1.1.patch.gz.b64 | gunzip > v0.1.1.patch
+          cd extracted/AnnoyingSpawners
+          patch -p1 < ../../v0.1.1.patch
+
       - name: Build Forge mod
         working-directory: extracted/AnnoyingSpawners
         run: gradle build --stacktrace
@@ -37,6 +45,6 @@ jobs:
       - name: Upload mod JAR
         uses: actions/upload-artifact@v4
         with:
-          name: AnnoyingSpawners-Forge-1.20.1
+          name: AnnoyingSpawners-0.1.1-Forge-1.20.1
           path: extracted/AnnoyingSpawners/build/libs/*.jar
           if-no-files-found: error
