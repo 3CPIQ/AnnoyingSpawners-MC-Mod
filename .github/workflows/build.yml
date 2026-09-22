@@ -39,6 +39,14 @@ jobs:
           cd extracted/AnnoyingSpawners
           patch -p1 < ../../v0.1.1.patch
 
+      - name: Apply 0.1.2 autocomplete fixes
+        env:
+          PATCH_012_B64: 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
+        run: |
+          printf '%s' "$PATCH_012_B64" | base64 --decode | gunzip > /tmp/v0.1.2.patch
+          cd extracted/AnnoyingSpawners
+          patch -p1 < /tmp/v0.1.2.patch
+
       - name: Build Forge mod
         working-directory: extracted/AnnoyingSpawners
         run: gradle build --stacktrace
@@ -46,6 +54,6 @@ jobs:
       - name: Upload mod JAR
         uses: actions/upload-artifact@v4
         with:
-          name: AnnoyingSpawners-0.1.1-Forge-1.20.1
+          name: AnnoyingSpawners-0.1.2-Forge-1.20.1
           path: extracted/AnnoyingSpawners/build/libs/*.jar
           if-no-files-found: error
