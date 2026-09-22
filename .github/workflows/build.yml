@@ -34,7 +34,8 @@ jobs:
 
       - name: Apply 0.1.1 fixes
         run: |
-          cat patches/v0.1.1/part*.b64 | base64 --decode | gunzip > v0.1.1.patch
+          base64 --decode patches/v0.1.1rel.full.b64 | gunzip > v0.1.1.raw.patch
+          sed -e 's#a/oldsrc/AnnoyingSpawners/#a/#g' -e 's#b/AnnoyingSpawners/#b/#g' v0.1.1.raw.patch > v0.1.1.patch
           cd extracted/AnnoyingSpawners
           patch -p1 < ../../v0.1.1.patch
 
