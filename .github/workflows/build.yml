@@ -15,6 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.8'
+
       - name: Reconstruct source archive
         run: cat build-source/chunk*.b64 | base64 --decode > AnnoyingSpawners-0.1.0-source.zip
 
@@ -28,14 +39,21 @@ jobs:
           cd extracted/AnnoyingSpawners
           patch -p1 < ../../v0.1.1.patch
 
-      - name: Pack exact 0.1.1 source
+      - name: Apply 0.1.2 fixes
+        env:
+          PATCH_012_B64: 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
         run: |
-          cd extracted
-          zip -qr ../AnnoyingSpawners-0.1.1-workflow-source.zip AnnoyingSpawners
+          printf '%s' "$PATCH_012_B64" | base64 --decode | gunzip > /tmp/v0.1.2.patch
+          cd extracted/AnnoyingSpawners
+          patch -p1 < /tmp/v0.1.2.patch
 
-      - name: Upload exact 0.1.1 source
+      - name: Build Forge mod
+        working-directory: extracted/AnnoyingSpawners
+        run: gradle build --stacktrace
+
+      - name: Upload mod JAR
         uses: actions/upload-artifact@v4
         with:
-          name: AnnoyingSpawners-0.1.1-workflow-source
-          path: AnnoyingSpawners-0.1.1-workflow-source.zip
+          name: AnnoyingSpawners-0.1.2-Forge-1.20.1
+          path: extracted/AnnoyingSpawners/build/libs/*.jar
           if-no-files-found: error
